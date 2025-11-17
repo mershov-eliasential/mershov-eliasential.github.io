@@ -45,6 +45,29 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* --- NEW CSS ADDED --- */
+        .particle {
+            position: fixed; /* Use fixed positioning for viewport-relative clicks */
+            width: 15px;
+            height: 15px;
+            /* Use your uploaded image */
+            /* IMPORTANT: For this to work in preview, the image file 'eliasential shit.png' must be available. */
+            /* Since I can't guarantee the path, I'll use a green box as a fallback, but the code is set for your image. */
+            background-image: url('eliasential shit.png'); 
+            background-color: #96C93D; /* Fallback color */
+            background-size: cover;
+            background-position: center;
+            z-index: 1000;
+            pointer-events: none; /* Particles shouldn't be clickable */
+            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+            border-radius: 3px;
+            opacity: 1;
+            /* Start centered on the cursor */
+            transform: translate(-50%, -50%) scale(1);
+        }
+        /* --- END OF NEW CSS --- */
+
     </style>
 </head>
 <body class="font-sans bg-brand-cream text-brand-green">
@@ -54,11 +77,11 @@
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div>
                 <!-- 
-                  INSTRUCTION:
-                  In Google Sites, you will upload your 'logo (1).png' file here.
-                  This is a placeholder that uses your brand colors.
+                    INSTRUCTION:
+                    In Google Sites, you will upload your 'logo (1).png' file here.
+                    This is a placeholder that uses your brand colors.
                 -->
-                <img src="logo.png" alt="Eliasential Logo" class="h-10">
+                <img src="logo.png" alt="Eliasential Logo" class="h-10" onerror="this.src='https://placehold.co/150x40/4A7C59/F9F7F3?text=Eliasential'; this.onerror=null;">
             </div>
             <!-- Google Sites will auto-generate these links when you add pages -->
             <div class="hidden md:flex space-x-6">
@@ -75,7 +98,7 @@
 
     <!-- Section 1: Hero -->
     <section id="home" class="relative bg-white pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden"> <!-- Added overflow-hidden -->
-        <div class="container mx-auto px-6 text-center">
+        <div class="container mx-auto px-6 text-center relative z-10">
             <h1 class="text-4xl md:text-6xl font-bold text-brand-green mb-6 leading-tight font-heading animate-on-scroll">
                 Start Your Day the <span class="text-brand-light-green font-heading font-extrabold">Eliasential</span> Way.
             </h1>
@@ -98,7 +121,7 @@
                 
                 <!-- Product 1 -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col animate-on-scroll">
-                    <img src="placeholder.png" alt="Alexandrosshadow-lg" class="w-full h-64 object-cover">
+                    <img src="placeholder.png" alt="Alexandrosshadow-lg" class="w-full h-64 object-cover" onerror="this.src='https://placehold.co/600x400/96C93D/FFFFFF?text=Alexandros'; this.onerror=null;">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-2xl font-semibold text-brand-green mb-3 font-heading">Ancient Alexandros</h3>
                         <p class="text-gray-600 mb-4 flex-grow">Alexandros</p>
@@ -110,7 +133,7 @@
 
                 <!-- Product 2 -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col animate-on-scroll" style="transition-delay: 200ms;">
-                    <img src="placeholder.png" alt="Alexandrosshadow-lg" class="w-full h-64 object-cover">
+                    <img src="placeholder.png" alt="Alexandrosshadow-lg" class="w-full h-64 object-cover" onerror="this.src='https://placehold.co/600x400/4A7C59/FFFFFF?text=Alexandros+Sauce'; this.onerror=null;">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-2xl font-semibold text-brand-green mb-3 font-heading">Alexandros Sauce</h3>
                         <p class="text-gray-600 mb-4 flex-grow">Very nice</p>
@@ -122,7 +145,7 @@
 
                 <!-- Product 3 -->
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col animate-on-scroll" style="transition-delay: 400ms;">
-                    <img src="placeholder.png" alt="Alexandrosshadow-lg" class="w-full h-64 object-cover">
+                    <img src="placeholder.png" alt="Alexandrosshadow-lg" class="w-full h-64 object-cover" onerror="this.src='https://placehold.co/600x400/96C93D/FFFFFF?text=Alexandros+Soup'; this.onerror=null;">
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-2xl font-semibold text-brand-green mb-3 font-heading">Alexandros Soup</h3>
                         <p class="text-gray-600 mb-4 flex-grow">Fork ferk</p>
@@ -143,17 +166,11 @@
             <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto animate-on-scroll" style="transition-delay: 200ms;">
                 We believe in 100% Pipis Supremacy with aftershocks of Gerson. It is mandatory to eat the Roaring Knight.
             </p>
-            <!-- <div class="aspect-video max-w-4xl mx-auto bg-gray-200 rounded-lg shadow-xl overflow-hidden animate-on-scroll" style="transition-delay: 400ms;">
-              <video class="w-full h-full object-cover" controls>
-                <source src="https://res.cloudinary.com/dbd4whuwz/video/upload/v1761460886/Movie_on_10-10-2025_at_1.15_PM_kzyihm.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-            </video>
-            </div> -->
             <!-- 
-              INSTRUCTION:
-              This is where you will embed your video. 
-              Upload your 'Movie on 10-10-2025 at 1.15 PM.mov' to YouTube or Google Drive,
-              then use the "Embed" or "YouTube" block in Google Sites to add it here.
+                INSTRUCTION:
+                This is where you will embed your video. 
+                Upload your 'Movie on 10-10-2025 at 1.15 PM.mov' to YouTube or Google Drive,
+                then use the "Embed" or "YouTube" block in Google Sites to add it here.
             -->
             <div class="aspect-video max-w-4xl mx-auto bg-gray-200 rounded-lg shadow-xl overflow-hidden animate-on-scroll" style="transition-delay: 400ms;">
                 <!-- Placeholder for the video -->
@@ -200,7 +217,7 @@
     <!-- Footer -->
     <footer class="bg-white pt-16 pb-12">
         <div class="container mx-auto px-6 text-center">
-            <img src="logo.png" alt="Eliasential Logo" class="h-8 mx-auto mb-6">
+            <img src="logo.png" alt="Eliasential Logo" class="h-8 mx-auto mb-6" onerror="this.src='https://placehold.co/120x32/4A7C59/F9F7F3?text=Eliasential'; this.onerror=null;">
             <div class="flex justify-center space-x-6 mb-8">
                 <a href="#" class="text-brand-green hover:text-brand-light-green">Facebook</a>
                 <a href="#" class="text-brand-green hover:text-brand-light-green">Instagram</a>
@@ -239,11 +256,62 @@
                     observer.unobserve(target);
                 }, 100);
             });
+
+
+            /* --- NEW JAVASCRIPT ADDED --- */
+
+            // Function to create a particle explosion
+            function createParticleEffect(event) {
+                const particleCount = 20; // Number of particles
+                const startX = event.clientX; // Get click X
+                const startY = event.clientY; // Get click Y
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Set initial position at the click location
+                    particle.style.left = `${startX}px`;
+                    particle.style.top = `${startY}px`;
+                    
+                    document.body.appendChild(particle);
+
+                    // Calculate random destination
+                    const angle = Math.random() * Math.PI * 2; // Random angle
+                    const distance = Math.random() * 150 + 50; // Fly 50-200px
+                    const destX = Math.cos(angle) * distance;
+                    const destY = Math.sin(angle) * distance;
+                    const rotation = Math.random() * 720 - 360; // Random rotation
+
+                    // Trigger the animation (needs a tiny delay for transition to work)
+                    // We set the final state, and CSS transition handles the animation
+                    setTimeout(() => {
+                        particle.style.transform = `translate(-50%, -50%) translate(${destX}px, ${destY}px) rotate(${rotation}deg) scale(0.5)`;
+                        particle.style.opacity = '0';
+                    }, 10);
+
+                    // Remove particle after animation (800ms matches CSS transition)
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 800);
+                }
+            }
+
+            // Find all the buttons to apply the effect to
+            // This selects "Shop Now", "Discover Our Blends", and "Learn More" buttons
+            const buttons = document.querySelectorAll(
+                'header a[href="#products"], section#home a[href="#products"], section#products a[href="#"]'
+            );
+
+            // Add click listener to each button
+            buttons.forEach(button => {
+                button.addEventListener('click', createParticleEffect);
+            });
+
+            /* --- END OF NEW JAVASCRIPT --- */
+
         });
     </script>
 
 </body>
 </html>
-
-
-
