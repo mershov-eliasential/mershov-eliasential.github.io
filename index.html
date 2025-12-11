@@ -75,6 +75,7 @@
                 <a href="#products" class="text-brand-green hover:text-brand-light-green font-medium">Our Products</a>
                 <a href="#video" class="text-brand-green hover:text-brand-light-green font-medium">Presenting Eliasential</a>
                 <a href="#Why Us?" class="text-brand-green hover:text-brand-light-green font-medium">Why Us?</a>
+                <a href="about.html" class="text-brand-green hover:text-brand-light-green font-medium">About Us</a>
             </div>
             <a href="#shopping" class="bg-brand-light-green text-white px-5 py-2 rounded-full font-semibold hover:bg-brand-green transition duration-300">
                 Shop Now
@@ -85,10 +86,12 @@
     <!-- Section 1: Hero -->
     <section id="home" class="relative bg-white pt-16 pb-8 md:pt-24 md:pb-32 overflow-hidden">
         <div class="container mx-auto px-6 text-center relative z-10">
-            <h1 class="text-4xl md:text-6xl font-bold text-brand-green mb- leading-tight font-heading animate-on-scroll">
+            <h1 class="text-4xl md:text-6xl font-bold text-brand-green mb-6 leading-tight font-heading animate-on-scroll">
                 Start Your Day the <span class="text-brand-light-green font-heading font-extrabold">Eliasential</span> Way.
             </h1>
-            
+            <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-on-scroll" style="transition-delay: 200ms;">
+                Fuel your mornings with the perfect blend of nutrition and taste. Handcrafted, wholesome, and undeniably delicious.
+            </p>
         </div>
         <!-- Background cereal bowl image --><div class="absolute inset-0 z-0 opacity-10" style="background-image: url('https://placehold.co/1920x1080/F9F7F3/E0E0E0?text=Healthy+Cereal+Bowl'); background-size: cover; background-position: center; filter: blur(4px);"></div>
     </section>
@@ -158,8 +161,11 @@
                     <p class="text-gray-200"><i>Coming to the Winter Fair for only $2.99</i></p>
                 </div>
                 
-                <!-- Feature 2 --><div class="flex flex-col items-center animate-on-scroll" style="transition-delay: 200ms;">
-                    <svg class="w-16 h-16 mb-4 text-brand-light-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h10a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.88 11.239l.232-.348a.5.5 0 01.814-.112l1.624 2.165a.5.5 0 00.757.042l2.36-2.95a.5.5 0 01.834-.02l.17.283M3.055 11a.99.99 0 01.34-.73l1.823-1.823A.99.99 0 015.93 8h12.14a.99.99 0 01.712.293l1.823 1.823a.99.99 0 01.34.73m0 0l-17.89 0"></path></svg>
+                <!-- Feature 2: Icon Updated -->
+                <div class="flex flex-col items-center animate-on-scroll" style="transition-delay: 200ms;">
+                    <svg class="w-16 h-16 mb-4 text-brand-light-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
                     <h3 class="text-2xl font-semibold mb-2 font-heading">It's Homemade!</h3>
                     <p class="text-gray-200"><i>Made right here in Cyprus</i></p>
                 </div>
@@ -254,10 +260,8 @@
             }
 
             // Find all the buttons to apply the effect to
-            // This selects "Shop Now", "Discover Our Blends", and "Learn More" buttons
-            const buttons = document.querySelectorAll(
-                'header a[href="#products"], section#home a[href="#products"], section#products a[href="#"]'
-            );
+            // Modified selector to ensure we target the actual buttons in the HTML
+            const buttons = document.querySelectorAll('a.rounded-full');
 
             // Add click listener to each button
             buttons.forEach(button => {
