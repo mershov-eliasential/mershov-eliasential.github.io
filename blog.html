@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Eliasential - The Story</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.png" type="image/png">
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind --><script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-green': '#4A7C59',
+                        'brand-light-green': '#96C93D',
+                        'brand-cream': '#F9F7F3',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Load Google Fonts --><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        .particle {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background-image: url('eliasential shit.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 1000;
+            pointer-events: none;
+            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+            border-radius: 3px;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="font-sans bg-brand-cream text-brand-green flex flex-col min-h-screen">
+
+    <!-- Header --><header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html">
+                <img src="logo.png" alt="Eliasential Logo" class="h-10" onerror="this.src='https://placehold.co/150x40/4A7C59/F9F7F3?text=Eliasential'; this.onerror=null;">
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html#home" class="text-brand-green hover:text-brand-light-green font-medium">Home</a>
+                <a href="index.html#products" class="text-brand-green hover:text-brand-light-green font-medium">Our Products</a>
+                <a href="index.html#video" class="text-brand-green hover:text-brand-light-green font-medium">Presenting Eliasential</a>
+                <a href="index.html#Why Us?" class="text-brand-green hover:text-brand-light-green font-medium">Why Us?</a>
+                <a href="about.html" class="text-brand-green hover:text-brand-light-green font-medium">About Us</a>
+                <a href="blog.html" class="text-brand-green font-bold border-b-2 border-brand-green">About Us</a>
+            </div>
+            <a href="index.html#shopping" class="bg-brand-light-green text-white px-5 py-2 rounded-full font-semibold hover:bg-brand-green transition duration-300">
+                Shop Now
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative bg-white pt-16 pb-12 overflow-hidden">
+             <div class="container mx-auto px-6 text-center relative z-10 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold text-brand-green mb-6 font-heading">
+                    The Eliasential Blog
+                </h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    February
+                </p>
+            </div>
+            <div class="absolute inset-0 z-0 opacity-5" style="background-image: url('https://placehold.co/1920x400/F9F7F3/E0E0E0?text=Pattern');"></div>
+        </section>
+
+        <!-- Biography Section -->
+        <section class="py-16 bg-brand-cream">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row items-center gap-16">
+                    <!-- Image -->
+                    <div class="w-full md:w-1/2 fade-in" style="animation-delay: 0.2s;">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-brand-light-green rounded-lg transform translate-x-4 translate-y-4"></div>
+                            <img src="elias_portrait.jpg" alt="Elias Holmen" class="relative rounded-lg shadow-xl w-full object-cover h-[500px]" onerror="this.src='https://placehold.co/600x800/4A7C59/F9F7F3?text=Elias+Sential+Holmen'; this.onerror=null;">
+                        </div>
+                    </div>
+                    
+                    <!-- Text -->
+                    <div class="w-full md:w-1/2 fade-in" style="animation-delay: 0.4s;">
+                        <h2 class="text-3xl font-bold mb-6 font-heading text-brand-green">How are y'all doing?</h2>
+                        
+                        <div class="space-y-6 text-lg text-gray-700 leading-relaxed">
+                            <p>
+                                This is our first blog entry so I just wanted to ask you are you enjoying eliasential
+                            </p>
+                            
+                        </div>
+
+                        <div class="mt-8 p-6 bg-white rounded-lg border-l-4 border-brand-green shadow-sm">
+                            <p class="italic text-brand-green font-medium text-xl">"Something there's nothing you can do but weep, mourn and eat Eliasential."</p>
+                            <p class="mt-3 text-sm font-bold text-brand-light-green uppercase tracking-wide">— Elias "Sential" Holmen</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer --><footer class="bg-white pt-16 pb-12 border-t border-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <img src="logo.png" alt="Eliasential Logo" class="h-8 mx-auto mb-6" onerror="this.src='https://placehold.co/120x32/4A7C59/F9F7F3?text=Eliasential'; this.onerror=null;">
+            <p class="text-gray-500">&copy; 2025 Eliasential Foods. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Particle Script (Reused) --><script>
+        function createParticleEffect(event) {
+            const particleCount = 50; 
+            const startX = event.clientX; 
+            const startY = event.clientY; 
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                particle.style.left = `${startX}px`;
+                particle.style.top = `${startY}px`;
+                
+                document.body.appendChild(particle);
+
+                const angle = Math.random() * Math.PI * 2; 
+                const distance = Math.random() * 250 + 100; 
+                const destX = Math.cos(angle) * distance;
+                const destY = Math.sin(angle) * distance;
+                const rotation = Math.random() * 720 - 360; 
+
+                setTimeout(() => {
+                    particle.style.transform = `translate(-50%, -50%) translate(${destX}px, ${destY}px) rotate(${rotation}deg) scale(0.5)`;
+                    particle.style.opacity = '0';
+                }, 10);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 800);
+            }
+        }
+        document.querySelectorAll('a.rounded-full').forEach(button => {
+            button.addEventListener('click', createParticleEffect);
+        });
+    </script>
+</body>
+</html>
