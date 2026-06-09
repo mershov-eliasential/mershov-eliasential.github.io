@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Combustion Lab: Interactive Science Game</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .mono-font {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl shadow-lg shadow-orange-500/20">
+          <!-- Spark/Fire SVG Icon -->
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14l-1.121 2.121z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-orange-400 via-amber-200 to-red-400 bg-clip-text text-transparent">
+            Combustion Lab
+          </h1>
+          <p class="text-xs text-slate-400">Discover the Science of Chemical Ignition</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex space-x-1 bg-slate-950/60 p-1 rounded-lg border border-slate-800">
+        <button id="tab-sim-btn" onclick="switchTab('sim')" class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-orange-600 text-white shadow">
+          Simulation Lab
+        </button>
+        <button id="tab-quiz-btn" onclick="switchTab('quiz')" class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200">
+          Challenge 1: Fire Extinguisher
+        </button>
+        <button id="tab-eq-btn" onclick="switchTab('eq')" class="px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200">
+          Challenge 2: Balancing Act
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6 flex flex-col gap-6">
+    
+    <!-- Toast/Notification Alert -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-slate-900 border border-slate-800 text-slate-100 px-5 py-4 rounded-xl shadow-2xl transition-all duration-300 transform translate-y-10 opacity-0 max-w-sm">
+      <div id="toast-icon" class="p-1.5 bg-orange-500/10 text-orange-500 rounded-lg"></div>
+      <div>
+        <p id="toast-title" class="text-sm font-bold"></p>
+        <p id="toast-desc" class="text-xs text-slate-400 mt-0.5"></p>
+      </div>
+    </div>
+
+    <!-- TAB 1: COMBUSTION SIMULATION -->
+    <section id="tab-sim" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left: Interactive Simulation Panel -->
+      <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col">
+        <div class="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Combustion Chamber</span>
+          </div>
+          <!-- Reset Chamber -->
+          <button onclick="resetSimulation()" class="text-xs text-slate-400 hover:text-orange-400 transition-colors flex items-center gap-1 bg-slate-850 px-2.5 py-1 rounded-lg border border-slate-800">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17.2"></path></svg>
+            Reset Chamber
+          </button>
+        </div>
+
+        <!-- The Interactive Chamber Box -->
+        <div class="relative flex-grow min-h-[350px] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-6 border-b border-slate-800">
+          
+          <!-- Background Grid lines for high-tech aesthetic -->
+          <div class="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:2rem_2rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30"></div>
+
+          <!-- Flame Canvas Overlays -->
+          <canvas id="fireCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-20"></canvas>
+
+          <!-- The Burnable Object Container -->
+          <div class="relative z-10 flex flex-col items-center justify-center">
+            
+            <!-- Temperature Indicator Bubble -->
+            <div id="chamber-temp-badge" class="absolute -top-12 px-3 py-1 bg-slate-800 border border-slate-700 text-slate-300 rounded-full text-xs font-bold transition-all shadow-md">
+              Temp: <span class="text-orange-400">25°C</span>
+            </div>
+
+            <!-- Burning Object Card -->
+            <div class="relative p-6 bg-slate-900/60 border border-slate-800/80 rounded-2xl shadow-2xl backdrop-blur-sm group transition-all duration-300 hover:border-orange-500/30 flex flex-col items-center justify-center w-48 h-48">
+              
+              <!-- Spark Arc Effects -->
+              <div id="spark-effect" class="absolute inset-0 border border-orange-500/40 rounded-2xl opacity-0 scale-95 transition-all duration-300 pointer-events-none animate-ping"></div>
+
+              <!-- Fuel Asset/Image (Custom URL provided) -->
+              <img id="burn-image" 
+                   src="https://www.eliasential.shop/eliasential%20shit.png" 
+                   alt="Combustion Target" 
+                   onerror="handleImageError(this)"
+                   class="max-w-full max-h-32 object-contain select-none transition-all duration-300 ease-out transform"
+                   style="filter: brightness(1) contrast(1) sepia(0) grayscale(0);" />
+              
+              <!-- Custom Backup Text if image cannot render/fail -->
+              <span id="burn-image-fallback" class="hidden text-center text-xs font-semibold text-slate-400 p-2 border border-dashed border-slate-700 rounded bg-slate-900/80">
+                🚀 Object Loaded
+              </span>
+            </div>
+
+            <!-- Chamber Gas Sensor Display -->
+            <div class="mt-6 flex gap-4 text-xs font-bold tracking-wider text-slate-400">
+              <div class="flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1 rounded-full border border-slate-800">
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                O₂: <span id="gauge-o2" class="text-cyan-400">21%</span>
+              </div>
+              <div class="flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1 rounded-full border border-slate-800">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                CO₂: <span id="gauge-co2" class="text-purple-400">0.04%</span>
+              </div>
+              <div class="flex items-center gap-1.5 bg-slate-900/80 px-2.5 py-1 rounded-full border border-slate-800">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                H₂O: <span id="gauge-h2o" class="text-blue-400">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Smothering Lid Effect -->
+          <div id="smother-lid" class="absolute top-0 inset-x-0 h-4 bg-slate-800 border-b border-slate-600 transform -translate-y-full transition-transform duration-500 ease-in-out z-30 flex items-center justify-center">
+            <span class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Chamber Sealed</span>
+          </div>
+        </div>
+
+        <!-- Simulation Feedback Ticker -->
+        <div class="bg-slate-950 p-4 min-h-[70px] flex items-center justify-between gap-4 border-b border-slate-800">
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold text-slate-500 uppercase">Chemical Equation Observer</span>
+            <div id="chemical-equation" class="text-sm font-semibold text-orange-200 mt-1 mono-font">
+              Fuel + Oxygen <span class="text-slate-500">──(No Spark)──▶</span> (Reactants Ready)
+            </div>
+          </div>
+          <div id="combustion-status" class="px-3 py-1 rounded bg-slate-900 text-xs text-slate-400 font-bold border border-slate-800">
+            Chamber Idle
+          </div>
+        </div>
+
+        <!-- Big Trigger Button -->
+        <div class="p-4 bg-slate-900/40 flex items-center justify-center">
+          <button id="ignite-btn" onclick="triggerIgnition()" class="w-full md:w-2/3 py-3 px-6 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-xl font-bold shadow-lg shadow-orange-500/20 active:scale-98 transition-all flex items-center justify-center gap-2">
+            <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            STRICK MATCH / SPARK
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Settings & Educational Info Panel -->
+      <div class="lg:col-span-5 flex flex-col gap-6">
+        
+        <!-- Controls & Sliders Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            Environmental Adjustments
+          </h2>
+
+          <div class="space-y-6">
+            <!-- Heat Slider -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label for="temp-slider" class="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                  🌡️ Ambient Heat Level
+                </label>
+                <span id="temp-val" class="text-xs font-bold text-orange-400 bg-orange-950/40 px-2 py-0.5 rounded border border-orange-900/50">25°C</span>
+              </div>
+              <input type="range" id="temp-slider" min="20" max="600" value="25" oninput="updateTemperature(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-orange-500">
+              <p class="text-[10px] text-slate-500 mt-1">High heat is required to hit the ignition temperature threshold (&gt;250°C).</p>
+            </div>
+
+            <!-- Oxygen Slider -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label for="o2-slider" class="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                  💨 Oxygen Concentration ($O_2$)
+                </label>
+                <span id="o2-val" class="text-xs font-bold text-cyan-400 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-900/50">21%</span>
+              </div>
+              <input type="range" id="o2-slider" min="0" max="100" value="21" oninput="updateOxygen(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+              <p class="text-[10px] text-slate-500 mt-1">Normal atmospheric level is ~21%. Below 15%, flames suffocate.</p>
+            </div>
+
+            <!-- Toggle Airtight Cover -->
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-semibold text-slate-300 block">Sealed Chamber</span>
+                <span class="text-[10px] text-slate-500">Sealing consumes oxygen during combustion.</span>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="seal-chamber" onchange="toggleChamberSeal(this.checked)" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-300 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Fire Triangle Educational Module -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-2">
+            📐 The Fire Triangle Principle
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Fire is a rapid chemical reaction called <strong>combustion</strong>. To start and maintain a fire, three elements are essential:
+          </p>
+          <div class="grid grid-cols-3 gap-2.5 mt-3 text-center">
+            <div id="card-fuel" class="p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl transition-all duration-300">
+              <span class="text-lg">🪵</span>
+              <p class="text-[10px] font-bold text-slate-300 mt-1">1. Fuel</p>
+              <p class="text-[8px] text-slate-500">This object</p>
+            </div>
+            <div id="card-oxygen" class="p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl transition-all duration-300">
+              <span class="text-lg">💨</span>
+              <p class="text-[10px] font-bold text-slate-300 mt-1">2. Oxygen</p>
+              <p class="text-[8px] text-slate-500">Gas &gt; 15%</p>
+            </div>
+            <div id="card-heat" class="p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl transition-all duration-300">
+              <span class="text-lg">🔥</span>
+              <p class="text-[10px] font-bold text-slate-300 mt-1">3. Heat</p>
+              <p class="text-[8px] text-slate-500">Temp &gt; 250°C</p>
+            </div>
+          </div>
+          <p class="text-[11px] text-amber-300/80 mt-4 bg-amber-950/30 border border-amber-900/40 p-2.5 rounded-lg leading-snug">
+            💡 <strong>Mission:</strong> Raise the ambient temperature to at least 250°C, make sure Oxygen is active, and ignite the match to burn the target object!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: CHALLENGE 1 (FIRE EXTINGUISHER PUZZLE) -->
+    <section id="tab-quiz" class="hidden max-w-3xl mx-auto w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div class="p-6 border-b border-slate-800 bg-slate-900/40">
+        <span class="px-2.5 py-1 bg-orange-500/10 text-orange-400 border border-orange-500/20 text-[10px] font-bold uppercase rounded-md">Challenge 1</span>
+        <h2 class="text-xl font-bold text-white mt-2">Emergency Containment</h2>
+        <p class="text-xs text-slate-400 mt-1">Apply your understanding of the Fire Triangle to choose the correct response to put out dangerous chemical fires.</p>
+      </div>
+
+      <div class="p-6 space-y-6">
+        <!-- Question Block 1 -->
+        <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">⚠️</span>
+            <div>
+              <h3 class="text-sm font-bold text-slate-200">Scenario A: The Grease Fire</h3>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                A cooking/grease pan fire has broken out in the kitchen. Water will vaporize instantly, carrying burning oil droplets into the air and splashing the fire everywhere. What is the safest way to extinguish this fire?
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+            <!-- Option 1 -->
+            <button onclick="checkQuizAnswer('q1', 1)" class="q1-btn p-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-xl text-left text-xs font-semibold transition-all">
+              <span class="text-sm block mb-1">🪟 A. Fan the Flame</span>
+              Open all windows to let the air circulate and blow the heat away.
+            </button>
+            <!-- Option 2 -->
+            <button onclick="checkQuizAnswer('q1', 2)" class="q1-btn p-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-xl text-left text-xs font-semibold transition-all">
+              <span class="text-sm block mb-1">🪡 B. Suffocate with Lid</span>
+              Carefully slide a metal lid over the pan to cut off Oxygen supply.
+            </button>
+            <!-- Option 3 -->
+            <button onclick="checkQuizAnswer('q1', 3)" class="q1-btn p-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-xl text-left text-xs font-semibold transition-all">
+              <span class="text-sm block mb-1">🧼 C. Soap Spray</span>
+              Sprinkle dry dish soap over the oil to neutralize the liquid fuel.
+            </button>
+          </div>
+          <div id="q1-feedback" class="hidden mt-3 p-3 rounded-lg text-xs font-medium"></div>
+        </div>
+
+        <!-- Question Block 2 -->
+        <div class="p-5 bg-slate-950 border border-slate-800 rounded-xl">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">⚡</span>
+            <div>
+              <h3 class="text-sm font-bold text-slate-200">Scenario B: Electrical Short-Circuit</h3>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                An electrical fuse panel has sparked and caught fire. Spraying water on electrical systems creates severe electrocution hazards. How should you put it out?
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+            <!-- Option 1 -->
+            <button onclick="checkQuizAnswer('q2', 1)" class="q2-btn p-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-xl text-left text-xs font-semibold transition-all">
+              <span class="text-sm block mb-1">🫧 A. Carbon Dioxide ($CO_2$)</span>
+              Use a CO₂ extinguisher to push oxygen away and cool down the charge.
+            </button>
+            <!-- Option 2 -->
+            <button onclick="checkQuizAnswer('q2', 2)" class="q2-btn p-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-xl text-left text-xs font-semibold transition-all">
+              <span class="text-sm block mb-1">📑 B. Paper Blankets</span>
+              Cover the machine with newspapers to trap the sparks.
+            </button>
+            <!-- Option 3 -->
+            <button onclick="checkQuizAnswer('q2', 3)" class="q2-btn p-3 bg-slate-900 hover:bg-slate-850 border border-slate-800 rounded-xl text-left text-xs font-semibold transition-all">
+              <span class="text-sm block mb-1">💧 C. High Pressure Water</span>
+              Blast it with cool tap water to quickly lower the temperature.
+            </button>
+          </div>
+          <div id="q2-feedback" class="hidden mt-3 p-3 rounded-lg text-xs font-medium"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CHALLENGE 2 (EQUATION BALANCER) -->
+    <section id="tab-eq" class="hidden max-w-3xl mx-auto w-full bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div class="p-6 border-b border-slate-800 bg-slate-900/40">
+        <span class="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[10px] font-bold uppercase rounded-md">Challenge 2</span>
+        <h2 class="text-xl font-bold text-white mt-2">The Law of Conservation of Mass</h2>
+        <p class="text-xs text-slate-400 mt-1">In complete combustion of clean fuels like methane ($CH_4$), atoms are never created or destroyed—only rearranged! Balance the inputs and outputs of this reaction.</p>
+      </div>
+
+      <div class="p-6 space-y-6">
+        
+        <!-- Balancing Widget -->
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">Methane Combustion Reaction</h3>
+          
+          <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm font-semibold">
+            
+            <!-- Reactant 1: CH4 -->
+            <div class="flex items-center gap-1 bg-slate-900/80 px-4 py-3 rounded-xl border border-slate-800">
+              <span class="text-slate-400 font-mono text-sm">1</span>
+              <span class="mono-font font-bold text-orange-400 text-base">CH₄</span>
+              <span class="text-[9px] text-slate-500 block">Fuel</span>
+            </div>
+
+            <span class="text-xl text-slate-500 font-bold">+</span>
+
+            <!-- Reactant 2: O2 (Coeff Selector) -->
+            <div class="flex flex-col items-center gap-1.5 bg-slate-900 border border-slate-850 p-2 rounded-xl min-w-[90px]">
+              <div class="flex items-center gap-1">
+                <button onclick="changeCoeff('o2', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold text-xs">-</button>
+                <span id="coeff-o2" class="w-6 text-center font-bold text-cyan-400 font-mono text-base">1</span>
+                <button onclick="changeCoeff('o2', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold text-xs">+</button>
+              </div>
+              <span class="mono-font font-bold text-cyan-300 text-sm">O₂</span>
+            </div>
+
+            <!-- Reaction Arrow -->
+            <div class="flex flex-col items-center">
+              <span class="text-xl text-amber-500 font-bold">──▶</span>
+              <span class="text-[9px] text-amber-500 font-bold uppercase tracking-widest mt-1">Combust</span>
+            </div>
+
+            <!-- Product 1: CO2 (Coeff Selector) -->
+            <div class="flex flex-col items-center gap-1.5 bg-slate-900 border border-slate-850 p-2 rounded-xl min-w-[90px]">
+              <div class="flex items-center gap-1">
+                <button onclick="changeCoeff('co2', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold text-xs">-</button>
+                <span id="coeff-co2" class="w-6 text-center font-bold text-purple-400 font-mono text-base">1</span>
+                <button onclick="changeCoeff('co2', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold text-xs">+</button>
+              </div>
+              <span class="mono-font font-bold text-purple-300 text-sm">CO₂</span>
+            </div>
+
+            <span class="text-xl text-slate-500 font-bold">+</span>
+
+            <!-- Product 2: H2O (Coeff Selector) -->
+            <div class="flex flex-col items-center gap-1.5 bg-slate-900 border border-slate-850 p-2 rounded-xl min-w-[90px]">
+              <div class="flex items-center gap-1">
+                <button onclick="changeCoeff('h2o', -1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold text-xs">-</button>
+                <span id="coeff-h2o" class="w-6 text-center font-bold text-blue-400 font-mono text-base">1</span>
+                <button onclick="changeCoeff('h2o', 1)" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold text-xs">+</button>
+              </div>
+              <span class="mono-font font-bold text-blue-300 text-sm">H₂O</span>
+            </div>
+          </div>
+
+          <!-- Live Atom Balance Ledger -->
+          <div class="mt-8 pt-6 border-t border-slate-800/80 max-w-md mx-auto">
+            <h4 class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3">Balance Verification Ledger</h4>
+            
+            <div class="space-y-2.5">
+              <!-- Carbon Balance -->
+              <div class="flex items-center justify-between text-xs font-semibold bg-slate-900/50 px-4 py-2 rounded-lg">
+                <span class="text-slate-300">Carbon atoms (C)</span>
+                <div class="flex items-center gap-2">
+                  <span id="ledger-c-left" class="bg-slate-950 px-2 py-0.5 rounded text-slate-400 font-mono">1</span>
+                  <span class="text-slate-600">vs</span>
+                  <span id="ledger-c-right" class="bg-slate-950 px-2 py-0.5 rounded text-slate-400 font-mono">1</span>
+                  <span id="ledger-c-status">✅</span>
+                </div>
+              </div>
+
+              <!-- Hydrogen Balance -->
+              <div class="flex items-center justify-between text-xs font-semibold bg-slate-900/50 px-4 py-2 rounded-lg">
+                <span class="text-slate-300">Hydrogen atoms (H)</span>
+                <div class="flex items-center gap-2">
+                  <span id="ledger-h-left" class="bg-slate-950 px-2 py-0.5 rounded text-slate-400 font-mono">4</span>
+                  <span class="text-slate-600">vs</span>
+                  <span id="ledger-h-right" class="bg-slate-950 px-2 py-0.5 rounded text-slate-400 font-mono">2</span>
+                  <span id="ledger-h-status">❌</span>
+                </div>
+              </div>
+
+              <!-- Oxygen Balance -->
+              <div class="flex items-center justify-between text-xs font-semibold bg-slate-900/50 px-4 py-2 rounded-lg">
+                <span class="text-slate-300">Oxygen atoms (O)</span>
+                <div class="flex items-center gap-2">
+                  <span id="ledger-o-left" class="bg-slate-950 px-2 py-0.5 rounded text-slate-400 font-mono">2</span>
+                  <span class="text-slate-600">vs</span>
+                  <span id="ledger-o-right" class="bg-slate-950 px-2 py-0.5 rounded text-slate-400 font-mono">3</span>
+                  <span id="ledger-o-status">❌</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button / Status Banner -->
+            <div class="mt-6">
+              <button id="verify-eq-btn" onclick="checkEquationBalance()" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700 transition-all flex items-center justify-center gap-1.5">
+                <span>🔄 Submit & Balance Equation</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Info & Credits -->
+  <footer class="mt-auto bg-slate-900/40 border-t border-slate-900 py-6 px-6 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Combustion Science Classroom. Designed with modern interactive elements.</p>
+      <div class="flex gap-4">
+        <span class="hover:text-slate-400 transition-colors cursor-pointer">Education Guidelines</span>
+        <span class="hover:text-slate-400 transition-colors cursor-pointer">Science Standards</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // State Variables
+    let currentTab = 'sim';
+    let isBurning = false;
+    let temperature = 25; // ambient temperature
+    let oxygen = 21; // ambient oxygen concentration
+    let chamberSealed = false;
+    let burnProgress = 0; // scale 0 to 1
+
+    // Gas Concentrations (Simulated)
+    let co2Val = 0.04;
+    let h2oVal = 0;
+
+    // Canvas Properties
+    const canvas = document.getElementById('fireCanvas');
+    const ctx = canvas.getContext('2d');
+    let animationId = null;
+    let particles = [];
+
+    // Chemical Equation Balancing State
+    const coeffState = {
+      o2: 1,
+      co2: 1,
+      h2o: 1
+    };
+
+    // Initialize Canvas Size on load
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      setupParticleSystem();
+      window.addEventListener('resize', resizeCanvas);
+    });
+
+    // Fallback Image handling if target URL fails to fetch
+    function handleImageError(image) {
+      console.warn("Target image failed to load, switching to local robust rendering fallback styling.");
+      image.style.display = 'none';
+      const fallback = document.getElementById('burn-image-fallback');
+      if (fallback) {
+        fallback.classList.remove('hidden');
+        fallback.innerHTML = "🪵 Charcoal Block<br><span class='text-[10px] text-slate-500'>(Target Asset)</span>";
+      }
+    }
+
+    // Toggle Navigation Tabs
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.getElementById('tab-sim').classList.add('hidden');
+      document.getElementById('tab-quiz').classList.add('hidden');
+      document.getElementById('tab-eq').classList.add('hidden');
+
+      document.getElementById('tab-sim-btn').className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200";
+      document.getElementById('tab-quiz-btn').className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200";
+      document.getElementById('tab-eq-btn').className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200";
+
+      if (tabId === 'sim') {
+        document.getElementById('tab-sim').classList.remove('hidden');
+        document.getElementById('tab-sim-btn').className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-orange-600 text-white shadow";
+      } else if (tabId === 'quiz') {
+        document.getElementById('tab-quiz').classList.remove('hidden');
+        document.getElementById('tab-quiz-btn').className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-orange-600 text-white shadow";
+      } else if (tabId === 'eq') {
+        document.getElementById('tab-eq').classList.remove('hidden');
+        document.getElementById('tab-eq-btn').className = "px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 bg-orange-600 text-white shadow";
+        updateLedger();
+      }
+    }
+
+    // Toast Alerts
+    function showToast(title, desc, type = 'info') {
+      const toast = document.getElementById('toast');
+      const tTitle = document.getElementById('toast-title');
+      const tDesc = document.getElementById('toast-desc');
+      const tIcon = document.getElementById('toast-icon');
+
+      tTitle.innerText = title;
+      tDesc.innerText = desc;
+
+      if (type === 'success') {
+        tIcon.innerHTML = '✅';
+        tIcon.className = 'p-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg';
+      } else if (type === 'error') {
+        tIcon.innerHTML = '❌';
+        tIcon.className = 'p-1.5 bg-rose-500/10 text-rose-400 rounded-lg';
+      } else {
+        tIcon.innerHTML = '🔥';
+        tIcon.className = 'p-1.5 bg-orange-500/10 text-orange-400 rounded-lg';
+      }
+
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-10', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      }, 50);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-10', 'opacity-0');
+        setTimeout(() => toast.classList.add('hidden'), 300);
+      }, 4000);
+    }
+
+    // Adjust Canvas Viewports Fluidly
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+
+    // Set Up Temperature
+    function updateTemperature(val) {
+      temperature = parseInt(val);
+      document.getElementById('temp-val').innerText = `${temperature}°C`;
+      document.getElementById('chamber-temp-badge').innerHTML = `Temp: <span class="text-orange-400">${temperature}°C</span>`;
+      
+      // Update Triangle visualization color card if met
+      const heatCard = document.getElementById('card-heat');
+      if (temperature >= 250) {
+        heatCard.className = "p-2.5 bg-red-950/40 border border-red-700 rounded-xl text-center transition-all duration-300";
+      } else {
+        heatCard.className = "p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl text-center transition-all duration-300";
+      }
+      
+      checkCombustionSustainability();
+    }
+
+    // Set Up Oxygen Level
+    function updateOxygen(val) {
+      oxygen = parseInt(val);
+      document.getElementById('o2-val').innerText = `${oxygen}%`;
+      document.getElementById('gauge-o2').innerText = `${oxygen}%`;
+
+      // Update Triangle visualization oxygen color card
+      const o2Card = document.getElementById('card-oxygen');
+      if (oxygen >= 15) {
+        o2Card.className = "p-2.5 bg-cyan-950/40 border border-cyan-700 rounded-xl text-center transition-all duration-300";
+      } else {
+        o2Card.className = "p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl text-center transition-all duration-300";
+      }
+
+      checkCombustionSustainability();
+    }
+
+    // Seal Chamber Mode
+    function toggleChamberSeal(checked) {
+      chamberSealed = checked;
+      const lid = document.getElementById('smother-lid');
+      if (checked) {
+        lid.classList.remove('-translate-y-full');
+        lid.classList.add('translate-y-0');
+        showToast("Chamber Sealed", "Oxygen will consume over time during combustion!", "info");
+      } else {
+        lid.classList.add('-translate-y-full');
+        lid.classList.remove('translate-y-0');
+        showToast("Chamber Opened", "Gas composition returned to fresh atmosphere.", "info");
+        // Reset atmosphere slightly
+        oxygen = parseInt(document.getElementById('o2-slider').value);
+        document.getElementById('gauge-o2').innerText = `${oxygen}%`;
+        document.getElementById('gauge-co2').innerText = `0.04%`;
+        document.getElementById('gauge-h2o').innerText = `0%`;
+      }
+    }
+
+    // Ignition Trigger Logic
+    function triggerIgnition() {
+      // Trigger short flash animation
+      const spark = document.getElementById('spark-effect');
+      spark.classList.remove('opacity-0', 'scale-95');
+      spark.classList.add('opacity-100', 'scale-110');
+      
+      setTimeout(() => {
+        spark.classList.add('opacity-0', 'scale-95');
+        spark.classList.remove('opacity-100', 'scale-110');
+      }, 500);
+
+      // Verify Fire Triangle conditions
+      if (temperature < 250) {
+        showToast("Ignition Failed", "Temperature too low! Solid fuel requires at least 250°C to combust.", "error");
+        return;
+      }
+
+      if (oxygen < 15) {
+        showToast("Ignition Failed", "Oxygen levels are too low! Fire requires at least 15% Oxygen concentration.", "error");
+        return;
+      }
+
+      if (burnProgress >= 1) {
+        showToast("No Fuel Left", "The object has completely combusted into ash and gases!", "error");
+        return;
+      }
+
+      // Fire Ignites!
+      isBurning = true;
+      document.getElementById('combustion-status').innerText = "🔥 BURNING";
+      document.getElementById('combustion-status').className = "px-3 py-1 rounded bg-red-950 text-xs text-red-400 font-bold border border-red-800 animate-pulse";
+      document.getElementById('card-fuel').className = "p-2.5 bg-amber-950/40 border border-amber-700 rounded-xl text-center transition-all duration-300";
+      
+      showToast("Combustion Started!", "The reaction is consuming fuel and oxygen.", "success");
+      
+      if (!animationId) {
+        startBurnLoop();
+      }
+    }
+
+    // Continuous loop for simulated chemical changes and particle rendering
+    function startBurnLoop() {
+      function run() {
+        if (!isBurning) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+          return;
+        }
+
+        // 1. Consume Oxygen and Produce CO2 and Water if Sealed
+        if (chamberSealed) {
+          if (oxygen > 0) {
+            oxygen = Math.max(0, oxygen - 0.15);
+            co2Val = Math.min(100, co2Val + 0.15);
+            h2oVal = Math.min(100, h2oVal + 0.30);
+            
+            document.getElementById('gauge-o2').innerText = `${oxygen.toFixed(1)}%`;
+            document.getElementById('gauge-co2').innerText = `${co2Val.toFixed(2)}%`;
+            document.getElementById('gauge-h2o').innerText = `${h2oVal.toFixed(1)}%`;
+            
+            // Check if starved of oxygen
+            if (oxygen < 12) {
+              extinguishFire("Oxygen supply depleted!");
+            }
+          }
+        } else {
+          // If unsealed, ambient levels stay relatively stable but show small product escape indicators
+          co2Val = Math.min(5, co2Val + 0.02);
+          h2oVal = Math.min(10, h2oVal + 0.04);
+          document.getElementById('gauge-co2').innerText = `${co2Val.toFixed(2)}%`;
+          document.getElementById('gauge-h2o').innerText = `${h2oVal.toFixed(1)}%`;
+        }
+
+        // 2. Consume fuel (progress char level of target image)
+        if (burnProgress < 1) {
+          burnProgress = Math.min(1, burnProgress + 0.0015);
+          
+          // Modify CSS Filters dynamically on the target image to represent burning, soot coating, and ash production
+          const img = document.getElementById('burn-image');
+          const brightness = 1 - (burnProgress * 0.85); // gets darker
+          const sepia = burnProgress * 0.5;
+          const grayscale = burnProgress * 1;
+          const contrast = 1 + (burnProgress * 0.4);
+          
+          img.style.filter = `brightness(${brightness}) sepia(${sepia}) grayscale(${grayscale}) contrast(${contrast})`;
+          
+          // Shrink slightly to simulate ash collapsing
+          img.style.transform = `scale(${1 - (burnProgress * 0.15)})`;
+
+          // Generate Fire particles dynamically based on current oxygen level intensity
+          createFireParticles();
+        } else {
+          extinguishFire("Fuel completely consumed into carbonaceous residue (ash)!");
+          document.getElementById('card-fuel').className = "p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl text-center transition-all duration-300";
+        }
+
+        // Render fire/smoke updates
+        updateAndRenderParticles();
+        updateChemicalEquationText();
+
+        animationId = requestAnimationFrame(run);
+      }
+      animationId = requestAnimationFrame(run);
+    }
+
+    // Dynamic equation explanation
+    function updateChemicalEquationText() {
+      const eqEl = document.getElementById('chemical-equation');
+      if (isBurning) {
+        if (oxygen > 30) {
+          eqEl.innerHTML = `<span class="text-emerald-400">Complete Combustion:</span> Fuel + O₂ ──▶ CO₂ + H₂O + Heat`;
+        } else {
+          eqEl.innerHTML = `<span class="text-amber-400">Incomplete Combustion:</span> Fuel + O₂ ──▶ CO₂ + CO (toxic gas) + C (soot) + H₂O`;
+        }
+      } else if (burnProgress >= 1) {
+        eqEl.innerHTML = `<span class="text-slate-500">Reaction Complete:</span> Leftover Ashes + Gases`;
+      } else {
+        eqEl.innerHTML = `Fuel + Oxygen <span class="text-slate-500">──(No Spark)──▶</span> (Reactants Ready)`;
+      }
+    }
+
+    // Check if conditions are still met to sustain combustion
+    function checkCombustionSustainability() {
+      if (!isBurning) return;
+
+      if (temperature < 200) { // drops below kindling point
+        extinguishFire("Temperature dropped below kindling point!");
+      }
+      if (oxygen < 15) {
+        extinguishFire("Oxygen suffocated!");
+      }
+    }
+
+    // Stop fire safely with status message
+    function extinguishFire(reason) {
+      if (!isBurning) return;
+      isBurning = false;
+      document.getElementById('combustion-status').innerText = "Chamber Idle";
+      document.getElementById('combustion-status').className = "px-3 py-1 rounded bg-slate-900 text-xs text-slate-400 font-bold border border-slate-800";
+      showToast("Fire Extinguished", reason, "info");
+      
+      // Decay remaining fire particles gently
+      setTimeout(() => {
+        particles = [];
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }, 500);
+    }
+
+    // Reset Simulation Parameters entirely
+    function resetSimulation() {
+      isBurning = false;
+      burnProgress = 0;
+      co2Val = 0.04;
+      h2oVal = 0;
+      particles = [];
+      
+      // Reset Image filters
+      const img = document.getElementById('burn-image');
+      img.style.filter = "brightness(1) sepia(0) grayscale(0) contrast(1)";
+      img.style.transform = "scale(1)";
+
+      // Reset controls & labels
+      document.getElementById('temp-slider').value = 25;
+      updateTemperature(25);
+      
+      document.getElementById('o2-slider').value = 21;
+      updateOxygen(21);
+
+      document.getElementById('seal-chamber').checked = false;
+      toggleChamberSeal(false);
+
+      // Clear Canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById('chemical-equation').innerHTML = `Fuel + Oxygen <span class="text-slate-500">──(No Spark)──▶</span> (Reactants Ready)`;
+      document.getElementById('card-fuel').className = "p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl text-center transition-all duration-300";
+
+      showToast("Simulation Reset", "Combustion chamber environment restored.", "success");
+    }
+
+
+    /* Flame Particle System Implementation */
+    function setupParticleSystem() {
+      particles = [];
+    }
+
+    function createFireParticles() {
+      // Spawn rate based on Oxygen availability
+      const spawnCount = Math.floor(oxygen / 10);
+      for (let i = 0; i < spawnCount; i++) {
+        particles.push({
+          x: canvas.width / 2 + (Math.random() - 0.5) * 110,
+          y: canvas.height / 2 + 30 + (Math.random() - 0.5) * 15,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: -Math.random() * 3.5 - 1.5,
+          size: Math.random() * 14 + 6,
+          life: 1,
+          decay: Math.random() * 0.02 + 0.015,
+          // Fire gradients: yellow to red
+          colorType: Math.random()
+        });
+      }
+    }
+
+    function updateAndRenderParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+        
+        let r = 255, g = 100, b = 20;
+        if (p.colorType > 0.7) {
+          // Yellow hot spark
+          g = 210; b = 40;
+        } else if (p.colorType < 0.2) {
+          // Smoke puff
+          r = 75; g = 85; b = 99;
+        }
+
+        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${p.life * 0.9})`);
+        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        
+        ctx.fillStyle = grad;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+
+    /* Challenge 1: Fire Extinguisher Logic */
+    function checkQuizAnswer(questionId, choice) {
+      const q1Feedback = document.getElementById('q1-feedback');
+      const q2Feedback = document.getElementById('q2-feedback');
+
+      // Question 1: Grease Fire
+      if (questionId === 'q1') {
+        const buttons = document.querySelectorAll('.q1-btn');
+        buttons.forEach(b => b.classList.add('opacity-60'));
+
+        q1Feedback.classList.remove('hidden');
+        if (choice === 2) {
+          q1Feedback.className = "mt-3 p-3 rounded-lg text-xs font-semibold bg-emerald-950/40 text-emerald-400 border border-emerald-800";
+          q1Feedback.innerHTML = "🎯 Correct! Placing a metal lid blocks incoming Oxygen ($O_2$), collapsing the Fire Triangle instantly without spilling oil.";
+          showToast("Excellent Choice!", "You successfully suffocated the grease fire.", "success");
+        } else {
+          q1Feedback.className = "mt-3 p-3 rounded-lg text-xs font-semibold bg-red-950/40 text-red-400 border border-red-800";
+          q1Feedback.innerHTML = "❌ Try Again! Opening windows provides more Oxygen, and soap does not choke the thermal system reliably.";
+        }
+      }
+
+      // Question 2: Electrical Fuse Box Fire
+      if (questionId === 'q2') {
+        const buttons = document.querySelectorAll('.q2-btn');
+        buttons.forEach(b => b.classList.add('opacity-60'));
+
+        q2Feedback.classList.remove('hidden');
+        if (choice === 1) {
+          q2Feedback.className = "mt-3 p-3 rounded-lg text-xs font-semibold bg-emerald-950/40 text-emerald-400 border border-emerald-800";
+          q2Feedback.innerHTML = "🎯 Correct! Carbon Dioxide ($CO_2$) is non-conductive, displacing oxygen and safe for electrical circuits.";
+          showToast("Well Done!", "CO₂ is the gold standard for electrical hazard fires.", "success");
+        } else {
+          q2Feedback.className = "mt-3 p-3 rounded-lg text-xs font-semibold bg-red-950/40 text-red-400 border border-red-800";
+          q2Feedback.innerHTML = "❌ Incorrect. Paper blankets add fuel to the electrical spark, and water is a dangerous electricity conductor!";
+        }
+      }
+    }
+
+
+    /* Challenge 2: Equation Balancer Logic */
+    function changeCoeff(item, amount) {
+      coeffState[item] = Math.max(1, Math.min(6, coeffState[item] + amount));
+      document.getElementById(`coeff-${item}`).innerText = coeffState[item];
+      updateLedger();
+    }
+
+    function updateLedger() {
+      // Inputs: CH4 + (O2_coeff * O2)
+      // Products: (CO2_coeff * CO2) + (H2O_coeff * H2O)
+      
+      const leftC = 1; // 1 Carbon in CH4
+      const leftH = 4; // 4 Hydrogen in CH4
+      const leftO = coeffState.o2 * 2; // 2 Oxygen per O2
+
+      const rightC = coeffState.co2 * 1; // 1 Carbon per CO2
+      const rightH = coeffState.h2o * 2; // 2 Hydrogen per H2O
+      const rightO = (coeffState.co2 * 2) + (coeffState.h2o * 1); // 2 Oxygen in CO2 + 1 in H2O
+
+      // Render counts
+      document.getElementById('ledger-c-left').innerText = leftC;
+      document.getElementById('ledger-c-right').innerText = rightC;
+      document.getElementById('ledger-c-status').innerText = (leftC === rightC) ? "✅" : "❌";
+
+      document.getElementById('ledger-h-left').innerText = leftH;
+      document.getElementById('ledger-h-right').innerText = rightH;
+      document.getElementById('ledger-h-status').innerText = (leftH === rightH) ? "✅" : "❌";
+
+      document.getElementById('ledger-o-left').innerText = leftO;
+      document.getElementById('ledger-o-right').innerText = rightO;
+      document.getElementById('ledger-o-status').innerText = (leftO === rightO) ? "✅" : "❌";
+
+      const allBalanced = (leftC === rightC) && (leftH === rightH) && (leftO === rightO);
+      const btn = document.getElementById('verify-eq-btn');
+
+      if (allBalanced) {
+        btn.className = "w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-lg transition-all flex items-center justify-center gap-1.5";
+        btn.innerHTML = "🎉 Equation Fully Balanced! Click to Submit";
+      } else {
+        btn.className = "w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-xl text-xs font-bold border border-slate-700 transition-all flex items-center justify-center gap-1.5";
+        btn.innerHTML = "🔄 Balance Reactant and Product Atoms";
+      }
+    }
+
+    function checkEquationBalance() {
+      const leftC = 1;
+      const leftH = 4;
+      const leftO = coeffState.o2 * 2;
+
+      const rightC = coeffState.co2 * 1;
+      const rightH = coeffState.h2o * 2;
+      const rightO = (coeffState.co2 * 2) + (coeffState.h2o * 1);
+
+      if ((leftC === rightC) && (leftH === rightH) && (leftO === rightO)) {
+        showToast("Mass Conserved!", `Perfect equation! 1 CH₄ + 2 O₂ ──▶ 1 CO₂ + 2 H₂O`, "success");
+      } else {
+        showToast("Imbalanced!", "Keep adjusting the numbers so atoms match on both sides.", "error");
+      }
+    }
+  </script>
+</body>
+</html>
